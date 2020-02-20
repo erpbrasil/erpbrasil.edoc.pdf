@@ -31,19 +31,23 @@ class VoidElement():
         return self.__str__()
 
 
+def imprimir(string_xml=False, caminho_xml=False, output_dir=False):
+    if caminho_xml:
+        string_xml = open(caminho_xml,'rb').read()
+
+
+    imprimir = ImprimirXml(string_xml, output_dir)
+    imprimir.gera_pdf()
 
 
 
 
+class ImprimirXml(object):
 
-class DanfeXml(object):
+    def __init__(self, string_xml, output_dir):
 
-    def __init__(self):
-        self.xml = open(
-            DIRNAME + '/exemplos_nfe/nProt_135190157727764_v4.00-procNFe.xml',
-            'rb'
-        ).read()
-
+        self.xml = string_xml
+        self.output_dir = output_dir
         self.object_xml = objectify.fromstring(self.xml, parser=parser)
 
         self.imprime_canhoto = True
@@ -52,19 +56,19 @@ class DanfeXml(object):
         self.nome_sistema = ''
 
     def _gera_pdf(self, template):
-        arq_template = DIRNAME + '/' + uuid4().hex
+        arq_template = self.output_dir + '/' + uuid4().hex
         open(arq_template, 'wb').write(template.read())
         template.close()
 
         arq_temp = uuid4().hex
-        arq_odt = DIRNAME + '/' + arq_temp + '.odt'
-        arq_pdf = DIRNAME + '/' + arq_temp + '.pdf'
+        arq_odt = self.output_dir + '/' + arq_temp + '.odt'
+        arq_pdf = self.output_dir + '/' + arq_temp + '.pdf'
 
         t = Template(arq_template, arq_odt)
         t.render({'danfe': self})
 
         lo = sh.libreoffice('--headless', '--invisible', '--convert-to',
-                            'pdf', '--outdir', DIRNAME, arq_odt, _bg=True)
+                            'pdf', '--outdir', self.output_dir, arq_odt, _bg=True)
         lo.wait()
 
         self.conteudo_pdf = open(arq_pdf, 'rb').read()
@@ -73,9 +77,9 @@ class DanfeXml(object):
         os.remove(arq_odt)
         os.remove(arq_pdf)
 
-    def gerar_danfe(self):
-        template = open(os.path.join(DIRNAME, 'danfe.odt'), 'rb')
+    def gera_pdf(self):
+        template = open(os.path.join(self.output_dir, 'danfe.odt'), 'rb')
         self._gera_pdf(template)
-        nome_arq = DIRNAME + \
+        nome_arq = self.output_dir + \
             '/23200118386751000153550010000015991035334421' + '.pdf'
         open(nome_arq, 'wb').write(self.conteudo_pdf)
