@@ -2,7 +2,6 @@
 import locale
 
 import pytz
-from erpbrasil.base.fiscal import cnpj_cpf
 import base64
 
 from genshi import Markup
@@ -10,20 +9,33 @@ from reportlab.graphics.barcode import createBarcodeDrawing
 from datetime import datetime
 from dateutil.parser import parse
 
+from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CNPJ
+from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CPF
 
-def formata_CNPJ(cnpj):
-    return cnpj_cpf.formata(cnpj)
-
-
-def formata_CPF(cpf):
-    return cnpj_cpf.formata(cpf)
+from erpbrasil.base.misc import format_zipcode
+formata_CEP = lambda cep: format_zipcode(cep, 'BR')
 
 
-def formata_CEP(cep):
-    if not len(cep.strip()):
-        return ''
+def formata_decimal(numero, digitos):
+    formato = '%.' + str(digitos) + 'f'
+    return locale.format(formato, float(numero), grouping=True)
 
-    return cep[0:5] + '-' + cep[5:8]
+formata_vBC = lambda valor: formata_decimal(valor,2)
+formata_vICMS = lambda valor: formata_decimal(valor,2)
+formata_vBCST = lambda valor: formata_decimal(valor,2)
+formata_vST = lambda valor: formata_decimal(valor,2)
+formata_vTotTrib = lambda valor: formata_decimal(valor,2)
+formata_vProd = lambda valor: formata_decimal(valor,2)
+formata_vFrete = lambda valor: formata_decimal(valor,2)
+formata_vSeg = lambda valor: formata_decimal(valor,2)
+formata_vDesc = lambda valor: formata_decimal(valor,2)
+formata_vOutro = lambda valor: formata_decimal(valor,2)
+formata_vIPI = lambda valor: formata_decimal(valor,2)
+formata_vNF = lambda valor: formata_decimal(valor,2)
+formata_qCom = lambda valor: formata_decimal(valor,2)
+formata_vUnCom = lambda valor: formata_decimal(valor,2)
+formata_vProd = lambda valor: formata_decimal(valor,2)
+formata_pIPI = lambda valor: formata_decimal(valor,2)
 
 
 def formata_fone(fone):
@@ -122,84 +134,6 @@ def formata_hora(data):
         return ''
     else:
         return data.text[11:19]
-
-
-def formata_decimal(numero, digitos):
-    formato = '%.' + str(digitos) + 'f'
-
-    return locale.format(formato, float(numero), grouping=True)
-
-
-def formata_vBC(vBC):
-    return formata_decimal(vBC, 2)
-
-
-def formata_vICMS(vICMS):
-    return formata_decimal(vICMS, 2)
-
-
-def formata_vBCST(vBCST):
-    return formata_decimal(vBCST, 2)
-
-
-def formata_vST(vST):
-    return formata_decimal(vST, 2)
-
-
-def formata_vTotTrib(vTotTrib):
-    return formata_decimal(vTotTrib, 2)
-
-
-def formata_vProd(vProd):
-    return formata_decimal(vProd, 2)
-
-
-def formata_vFrete(vFrete):
-    return formata_decimal(vFrete, 2)
-
-
-def formata_vSeg(vSeg):
-    return formata_decimal(vSeg, 2)
-
-
-def formata_vDesc(vDesc):
-    return formata_decimal(vDesc, 2)
-
-
-def formata_vOutro(vOutro):
-    return formata_decimal(vOutro, 2)
-
-
-def formata_vIPI(vIPI):
-    return formata_decimal(vIPI, 2)
-
-
-def formata_vNF(vNF):
-    return formata_decimal(vNF, 2)
-
-
-def formata_qCom(qCom):
-    return formata_decimal(qCom, 4)
-
-
-def formata_vUnCom(vUmCom):
-    return formata_decimal(vUmCom, 4)
-
-
-def formata_vProd(vProd):
-    return formata_decimal(vProd, 2)
-
-
-def formata_vBC(vBC):
-    return formata_decimal(vBC, 2)
-
-
-def formata_vIPI(vIPI):
-    return formata_decimal(vIPI, 2)
-
-
-def formata_pIPI(pIPI):
-    return formata_decimal(pIPI, 2)
 
 ##
 # -----------------------------------------------------------------------------
@@ -442,10 +376,6 @@ def versao(NFe):
     return NFe.infNFe.attrib['versao']
 
 
-def formata_hora(hora):
-    return hora[11:19]
-
-
 def informacoes_adicionais_formatadas(det):
     formatado = str(det.infAdProd).replace('|', '<text:line-break/>')
     return Markup(formatado)
@@ -470,5 +400,5 @@ def dSaiEnt(ide):
     return formata_data(str(ide.dhSaiEnt))
 
 
-def hSaiEnt(ide):
+def dhSaiEnt(ide):
     return formata_hora(str(ide.dhSaiEnt))
