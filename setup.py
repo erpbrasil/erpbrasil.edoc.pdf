@@ -38,6 +38,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+    namespace_packages=["erpbrasil"],
     include_package_data=True,
     zip_safe=False,
     classifiers=[
@@ -74,6 +75,7 @@ setup(
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
     install_requires=[
         'click',
+        'erpbrasil.base',
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require={
