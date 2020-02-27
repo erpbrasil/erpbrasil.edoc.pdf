@@ -8,28 +8,31 @@ nfe_namespace = lookup.get_namespace('http://www.portalfiscal.inf.br/nfe')
 
 # Campos que podem não existir no XML da NF-e
 NAO_OBRIGATORIO = [
-    'veicTransp',
-    'placa',
-    'fone',
-    'transporta',
-    'vTotTrib',
-    'marca',
-    'nVol',
-    'pesoL',
-    'vIPI',
-    'vol',
-    'IEST',
-    'CST',
-    'pIPI',
-    'RNTC',
-    'dhSaiEnt',
-    'indPag'
+    'veicTransp', 'placa', 'fone', 'transporta', 'vTotTrib', 'marca', 'nVol',
+    'pesoL', 'vIPI', 'vol', 'IEST', 'CST', 'pIPI', 'RNTC', 'dhSaiEnt',
+    'indPag', 'vBC', 'vICMS', 'pICMS', 'cobr', 'qVol', 'esp', 'pesoB', 'IE',
+    'IPI', 'nFat', 'vDesc',
 ]
 
 TAGS_ICMS = [
-    'ICMSSN102',
     'ICMS00',
-    'ICMS20'
+    'ICMS10',
+    'ICMS20',
+    'ICMS30',
+    'ICMS40',
+    'ICMS50',
+    'ICMS60',
+    'ICMS70',
+    'ICMS80',
+    'ICMS90',
+    'ICMSSN101',
+    'ICMSSN102',
+    'ICMSSN201',
+    'ICMSSN202',
+    'ICMSSN500',
+    'ICMSSN900',
+    'ICMSPart',
+    'ICMSST'
 ]
 
 TAGS_IPI = [

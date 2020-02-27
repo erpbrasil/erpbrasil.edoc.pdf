@@ -6,18 +6,12 @@ from py3o.template import Template
 import sh
 from lxml import objectify, etree
 from erpbrasil.edoc.pdf import parser
-
-
-DIRNAME = '/home/luisotavio/danfe'
-
-
-
+import tempfile
 
 #cte_namespace = lookup.get_namespace('http://www.portalfiscal.inf.br/cte')
 
 
-
-class VoidElement():
+class VoidElement(object):
 
     def __getattr__(self, item):
         if item == '__iter__':
@@ -30,56 +24,133 @@ class VoidElement():
     def __unicode__(self):
         return self.__str__()
 
-
-def imprimir(string_xml=False, caminho_xml=False, output_dir=False):
-    if caminho_xml:
-        string_xml = open(caminho_xml,'rb').read()
-
-
-    imprimir = ImprimirXml(string_xml, output_dir)
-    imprimir.gera_pdf()
-
-
+    def __len__(self):
+        return 0
 
 
 class ImprimirXml(object):
 
-    def __init__(self, string_xml, output_dir):
+    TIPOS_DOCUMENTOS = {
+        'nfe': 'danfe',
+    }
 
-        self.xml = string_xml
-        self.output_dir = output_dir
-        self.object_xml = objectify.fromstring(self.xml, parser=parser)
+    def __init__(self, string_xml):
+
+        self.string_xml = string_xml
+        self.output_dir = None
+        self.object_xml = objectify.fromstring(self.string_xml, parser=parser)
+        self.tipo_impressao = None
+        self.template = None
+        self.pdf = None
 
         self.imprime_canhoto = True
         self.logo = ''
         self.cabecalho = ''
         self.nome_sistema = ''
 
-    def _gera_pdf(self, template):
-        arq_template = self.output_dir + '/' + uuid4().hex
-        open(arq_template, 'wb').write(template.read())
+    def _identifica_tipo_impressao(self):
+        '''
+        Identifica o tipo de documento de acordo com o final da url do
+        parametro 'xmlns', da tag 'nfe'
+
+        :return: str: tipo do documento
+        '''
+
+        url = self.object_xml.nsmap[None]
+        documento = re.search(r'http://www.portalfiscal.inf.br/(.*)', url)
+        if not documento:
+            raise Exception('Não foi possível indentificar o tipo do '
+                            'documento pelo XML')
+        tipo = documento.group(1)
+
+        tipo = self.TIPOS_DOCUMENTOS[tipo.lower()]
+
+        return tipo
+
+
+    def _renderiza_documento(self):
+
+        '''
+        Renderiza o documento e salva o pdf do tipo de documento especificado
+        de acordo com o template correspondente
+
+        :return:
+        '''
+
+        script_dir = os.path.dirname(__file__)
+        template_path = os.path.join(script_dir, self.tipo_impressao + '.odt')
+        template = open(template_path, 'rb')
+        arq_template = tempfile.NamedTemporaryFile()
+        arq_template.write(template.read())
+        arq_template.seek(os.SEEK_SET)
         template.close()
 
-        arq_temp = uuid4().hex
-        arq_odt = self.output_dir + '/' + arq_temp + '.odt'
-        arq_pdf = self.output_dir + '/' + arq_temp + '.pdf'
+        arq_odt = tempfile.NamedTemporaryFile(suffix=".odt")
 
-        t = Template(arq_template, arq_odt)
+        t = Template(arq_template.name, arq_odt.name)
         t.render({'danfe': self})
 
         lo = sh.libreoffice('--headless', '--invisible', '--convert-to',
-                            'pdf', '--outdir', self.output_dir, arq_odt, _bg=True)
+                            'pdf', '--outdir', tempfile.gettempdir(),
+                            arq_odt.name, _bg=True)
         lo.wait()
 
-        self.conteudo_pdf = open(arq_pdf, 'rb').read()
+        arq_pdf = arq_odt.name[:-3] + 'pdf'
+        self.pdf = open(arq_pdf, 'rb').read()
 
-        os.remove(arq_template)
-        os.remove(arq_odt)
-        os.remove(arq_pdf)
+        arq_template.close()
+        arq_odt.close()
 
-    def gera_pdf(self):
-        template = open(os.path.join(self.output_dir, 'danfe.odt'), 'rb')
-        self._gera_pdf(template)
-        nome_arq = self.output_dir + \
-            '/23200118386751000153550010000015991035334421' + '.pdf'
-        open(nome_arq, 'wb').write(self.conteudo_pdf)
+    def _salva_pdf(self, output_dir):
+
+        '''
+
+        :param output_dir: (str): Caminho onde o arquivo pdf deve ser salvo no
+        disco
+        :return: (str): Caminho do PDF salvo no disco
+        '''
+
+        # Caso seja especificado o nome do arquivo a ser salvo no caminho de
+        # parâmetro
+        filename = os.path.basename(output_dir)[:-4]
+        if filename:
+            output_dir = output_dir.replace('.xml', '.pdf')
+            open(output_dir, 'wb').write(self.pdf)
+            return output_dir
+        else:
+            open(os.path.join(output_dir, 'danfe.pdf'), 'wb').write(self.pdf)
+            return os.path.join(output_dir, 'danfe.pdf')
+
+
+    @classmethod
+    def imprimir(self, string_xml=False, caminho_xml=False, output_dir=False,
+                 tipo_impressao=False):
+
+        '''
+        Método base para a impressão de documentos
+
+        :param string_xml: (str): String do XML do documento
+        :param caminho_xml: (str): Caminho para o arquivo XML do documento
+        :param output_dir: (str): Caminho para salvar o documento PDF no disco
+        :param tipo_impressao: (str): Tipo de impressão
+        :return: (str): Conteúdo do arquivo PDF
+        '''
+
+        if caminho_xml:
+            string_xml = open(caminho_xml, 'rb').read()
+
+        obj = ImprimirXml(string_xml)
+
+        # Identifica o tipo de documento a ser impresso
+        if tipo_impressao:
+            obj.tipo_impressao = tipo_impressao
+        else:
+            obj.tipo_impressao = obj._identifica_tipo_impressao()
+
+        obj._renderiza_documento()
+
+        # Salva PDF no disco
+        if output_dir:
+            return obj._salva_pdf(output_dir)
+
+        return obj.pdf

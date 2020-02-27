@@ -17,8 +17,12 @@ formata_CEP = lambda cep: format_zipcode(cep, 'BR')
 
 
 def formata_decimal(numero, digitos):
+    numero = float(numero)
+
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
     formato = '%.' + str(digitos) + 'f'
-    return locale.format(formato, float(numero), grouping=True)
+    return locale.format(formato, numero, grouping=True)
 
 formata_vBC = lambda valor: formata_decimal(valor,2)
 formata_vICMS = lambda valor: formata_decimal(valor,2)
@@ -36,6 +40,13 @@ formata_qCom = lambda valor: formata_decimal(valor,2)
 formata_vUnCom = lambda valor: formata_decimal(valor,2)
 formata_vProd = lambda valor: formata_decimal(valor,2)
 formata_pIPI = lambda valor: formata_decimal(valor,2)
+formata_vOrig = lambda valor: formata_decimal(valor,2)
+formata_vDesc = lambda valor: formata_decimal(valor,2)
+formata_vLiq = lambda valor: formata_decimal(valor,2)
+formata_vDup = lambda valor: formata_decimal(valor,2)
+formata_pesoB = lambda valor: formata_decimal(valor,2)
+formata_pesoL = lambda valor: formata_decimal(valor,2)
+formata_pICMS = lambda valor: formata_decimal(valor,2)
 
 
 def formata_fone(fone):
@@ -130,10 +141,12 @@ def formata_dhRecbto(dhRecbto):
 
 
 def formata_hora(data):
-    if data is '':
-        return ''
-    else:
-        return data.text[11:19]
+    return data[11:19]
+
+
+def formata_dVenc(dVenc):
+    dVenc = datetime.strptime(str(dVenc), '%Y-%m-%d')
+    return dVenc.strftime("%d/%m/%Y")
 
 ##
 # -----------------------------------------------------------------------------
@@ -347,11 +360,11 @@ def fatura_a_prazo(NFe):
     return False
 
 def fatura_a_vista(NFe):
-    if not (len(str(NFe.infNFe.cobr.fat.nFat)) or
-            len(str(NFe.infNFe.cobr.fat.vOrig)) or
-            len(str(NFe.infNFe.cobr.fat.vDesc)) or
-            len(str(NFe.infNFe.cobr.fat.vLiq))):
-        return False
+    # if not (len(str(NFe.infNFe.cobr.fat.nFat)) or
+    #         len(str(NFe.infNFe.cobr.fat.vOrig)) or
+    #         len(str(NFe.infNFe.cobr.fat.vDesc)) or
+    #         len(str(NFe.infNFe.cobr.fat.vLiq))):
+    #     return False
 
     fatura = fatura_a_prazo(NFe)
 
@@ -400,5 +413,5 @@ def dSaiEnt(ide):
     return formata_data(str(ide.dhSaiEnt))
 
 
-def dhSaiEnt(ide):
+def hSaiEnt(ide):
     return formata_hora(str(ide.dhSaiEnt))
