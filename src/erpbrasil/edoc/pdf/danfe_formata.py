@@ -84,13 +84,15 @@ def formata_fone(fone):
     return formatado
 
 
-def formata_modFrete(modFrete):
-    modFrete = int(modFrete)
+def modFrete_formatado(NFe):
+
+    modFrete = int(NFe.infNFe.transp.modFrete.text)
+
     if modFrete == 0:
         formatado = '0-Emitente'
 
     elif modFrete == 1:
-        if modFrete == 0:
+        if int(NFe.infNFe.ide.tpNF.text) == 0:
             formatado = '1-do Remetente'
         else:
             formatado = '1-do Destinatário'
@@ -360,11 +362,11 @@ def fatura_a_prazo(NFe):
     return False
 
 def fatura_a_vista(NFe):
-    # if not (len(str(NFe.infNFe.cobr.fat.nFat)) or
-    #         len(str(NFe.infNFe.cobr.fat.vOrig)) or
-    #         len(str(NFe.infNFe.cobr.fat.vDesc)) or
-    #         len(str(NFe.infNFe.cobr.fat.vLiq))):
-    #     return False
+    if not (len(str(NFe.infNFe.cobr.fat.nFat)) or
+            len(str(NFe.infNFe.cobr.fat.vOrig)) or
+            len(str(NFe.infNFe.cobr.fat.vDesc)) or
+            len(str(NFe.infNFe.cobr.fat.vLiq))):
+        return False
 
     fatura = fatura_a_prazo(NFe)
 
@@ -375,14 +377,44 @@ def numero_item(det):
     return int(det.attrib['nItem'])
 
 
+def regime_tributario(NFe):
+    return int(NFe.infNFe.emit.CRT.text)
+
 def cst_formatado(det):
-    formatado = str(det.imposto.ICMS.ICMSSN102.orig).zfill(1)
-    formatado += str(det.imposto.IPI.IPITrib.CST).zfill(2)
+    formatado = str(det.imposto.ICMS.tipoICMS.orig).zfill(1)
+
+    if hasattr(det.imposto, 'ISSQN'):
+        if str(det.imposto.ISSQN.regime_tributario.text) == 1:
+            formatado += '400'
+        else:
+            formatado += '41'
+
+    elif det.imposto.ICMS.regime_tributario == 1:
+        formatado += str(det.imposto.ICMS.tipoICMS.CSOSN).zfill(3)
+    else:
+        formatado += str(det.imposto.ICMS.tipoICMS.CST).zfill(2)
+
     return formatado
 
 
 def crt_descricao(NFe):
-    return ''
+    texto = 'Regime tributário: '
+
+    if int(NFe.infNFe.emit.CRT.text) == 1:
+        texto += 'SIMPLES Nacional'
+    elif int(NFe.infNFe.emit.CRT.text) == 2:
+        texto += 'SIMPLES Nacional - excesso de sublimite de receita bruta'
+    else:
+        texto += 'regime normal'
+
+    return texto
+
+
+def cst_descricao(NFe):
+    if int(NFe.infNFe.emit.CRT.text) == 1:
+        return 'CSOSN'
+    else:
+        return 'CST'
 
 
 def versao(NFe):
