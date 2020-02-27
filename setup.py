@@ -76,6 +76,12 @@ setup(
     install_requires=[
         'click',
         'erpbrasil.base',
+        'genshi',
+        'reportlab',
+        'lxml',
+        'py3o.template',
+        'sh',
+        'python-dateutil',
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require={
