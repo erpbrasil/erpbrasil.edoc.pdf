@@ -1,3 +1,8 @@
-__version__ = '0.0.0'
+# -*- encoding: utf-8 -*-
+# See http://peak.telecommunity.com/DevCenter/setuptools#namespace-packages
+try:
+    __import__("pkg_resources").declare_namespace(__name__)
+except ImportError:
+    from pkgutil import extend_path
 
-from erpbrasil.edoc.pdf import *  # noqa: F401
+    __path__ = extend_path(__path__, __name__)
