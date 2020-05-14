@@ -447,3 +447,23 @@ def dSaiEnt(ide):
 
 def hSaiEnt(ide):
     return formata_hora(str(ide.dhSaiEnt))
+
+
+def base_icms(det):
+    if str(det.imposto.ICMS.tipoICMS.CST) == '60':
+        return formata_decimal(det.imposto.ICMS.tipoICMS.vBCSTRet.text, 2)
+    return det.imposto.ICMS.tipoICMS.vBC
+
+
+def valor_icms(det):
+    if str(det.imposto.ICMS.tipoICMS.CST) == '60':
+        return formata_decimal(det.imposto.ICMS.tipoICMS.vICMSSTRet.text, 2)
+    return det.imposto.ICMS.tipoICMS.vICMS
+
+
+def aliquota_icms(det):
+    if str(det.imposto.ICMS.tipoICMS.CST) == '60':
+        return formata_decimal(det.imposto.ICMS.tipoICMS.pST.text, 2)
+    return det.imposto.ICMS.tipoICMS.pICMS
+
+
