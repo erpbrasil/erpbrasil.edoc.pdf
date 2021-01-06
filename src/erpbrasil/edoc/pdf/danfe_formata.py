@@ -50,7 +50,7 @@ formata_pICMS = lambda valor: formata_decimal(valor,2)
 
 
 def formata_fone(fone):
-    if not len(fone.strip()):
+    if not fone or not len(fone.strip()):
         return ''
 
     if fone.strip() == '0':
