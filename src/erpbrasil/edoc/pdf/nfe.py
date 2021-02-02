@@ -1,8 +1,10 @@
+import re
+from lxml import objectify, etree
+
 from erpbrasil.edoc.pdf.base import VoidElement
 from erpbrasil.edoc.pdf import lookup
-from lxml import objectify, etree
+
 from erpbrasil.edoc.pdf import danfe_formata
-import re
 
 nfe_namespace = lookup.get_namespace('http://www.portalfiscal.inf.br/nfe')
 
