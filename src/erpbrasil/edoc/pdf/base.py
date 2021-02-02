@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-from uuid import uuid4
-from py3o.template import Template
 import sh
-from lxml import objectify, etree
-from erpbrasil.edoc.pdf import parser
 import tempfile
 
-#cte_namespace = lookup.get_namespace('http://www.portalfiscal.inf.br/cte')
+from lxml import objectify
+from py3o.template import Template
+from erpbrasil.edoc.pdf import parser
+
+# cte_namespace = lookup.get_namespace('http://www.portalfiscal.inf.br/cte')
 
 
 class VoidElement(object):
@@ -67,16 +67,13 @@ class ImprimirXml(object):
 
         return tipo
 
-
     def _renderiza_documento(self):
-
         '''
         Renderiza o documento e salva o pdf do tipo de documento especificado
         de acordo com o template correspondente
 
         :return:
         '''
-
         script_dir = os.path.dirname(__file__)
         template_path = os.path.join(script_dir, self.tipo_impressao + '.odt')
         template = open(template_path, 'rb')
@@ -121,11 +118,9 @@ class ImprimirXml(object):
             open(os.path.join(output_dir, 'danfe.pdf'), 'wb').write(self.pdf)
             return os.path.join(output_dir, 'danfe.pdf')
 
-
     @classmethod
     def imprimir(self, string_xml=False, caminho_xml=False, output_dir=False,
                  tipo_impressao=False):
-
         '''
         Método base para a impressão de documentos
 
