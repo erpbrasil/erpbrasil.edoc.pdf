@@ -62,11 +62,11 @@ setup(
         # 'Programming Language :: Python :: Implementation :: Stackless',
         'Topic :: Utilities',
     ],
-    project_urls={
-        'Documentation': 'https://erpbrasiledocpdf.readthedocs.io/',
-        'Changelog': 'https://erpbrasiledocpdf.readthedocs.io/en/latest/changelog.html',
-        'Issue Tracker': 'https://github.com/erpbrasil/erpbrasil.edoc.pdf/issues',
-    },
+    # project_urls={
+    #     'Documentation': 'https://erpbrasiledocpdf.readthedocs.io/',
+    #     'Changelog': 'https://erpbrasiledocpdf.readthedocs.io/en/latest/changelog.html',
+    #     'Issue Tracker': 'https://github.com/erpbrasil/erpbrasil.edoc.pdf/issues',
+    # },
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
