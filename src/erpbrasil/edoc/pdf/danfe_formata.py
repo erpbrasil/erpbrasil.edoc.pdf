@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
-import locale
-import pytz
 import base64
-
-from genshi import Markup
-from reportlab.graphics.barcode import createBarcodeDrawing
+import locale
 from datetime import datetime
-from dateutil.parser import parse
 
+import pytz
+from dateutil.parser import parse
 from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CNPJ
 from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CPF
-
 from erpbrasil.base.misc import format_zipcode
+from genshi import Markup
+from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 def formata_decimal(numero, digitos):

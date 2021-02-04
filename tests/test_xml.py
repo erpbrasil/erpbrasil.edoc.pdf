@@ -1,4 +1,6 @@
-from os import walk, path
+from os import path
+from os import walk
+
 from erpbrasil.edoc.pdf import base
 
 PATH = 'xml'
