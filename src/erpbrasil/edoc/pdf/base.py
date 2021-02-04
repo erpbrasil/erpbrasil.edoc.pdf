@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-import sh
 import tempfile
 
+import sh
 from lxml import objectify
 from py3o.template import Template
+
 from erpbrasil.edoc.pdf import parser
 
 # cte_namespace = lookup.get_namespace('http://www.portalfiscal.inf.br/cte')

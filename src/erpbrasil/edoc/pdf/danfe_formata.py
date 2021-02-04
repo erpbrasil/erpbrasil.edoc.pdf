@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
-import locale
-import pytz
 import base64
-
-from genshi import Markup
-from reportlab.graphics.barcode import createBarcodeDrawing
+import locale
 from datetime import datetime
-from dateutil.parser import parse
 
+import pytz
+from dateutil.parser import parse
 from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CNPJ
 from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CPF
-
 from erpbrasil.base.misc import format_zipcode
+from genshi import Markup
+from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 def formata_decimal(numero, digitos):
@@ -23,29 +21,41 @@ def formata_decimal(numero, digitos):
     return locale.format(formato, numero, grouping=True)
 
 
-formata_vBC = lambda valor: formata_decimal(valor, 2)
-formata_vICMS = lambda valor: formata_decimal(valor, 2)
-formata_vBCST = lambda valor: formata_decimal(valor, 2)
-formata_vST = lambda valor: formata_decimal(valor, 2)
-formata_vTotTrib = lambda valor: formata_decimal(valor, 2)
-formata_vProd = lambda valor: formata_decimal(valor, 2)
-formata_vFrete = lambda valor: formata_decimal(valor, 2)
-formata_vSeg = lambda valor: formata_decimal(valor, 2)
-formata_vDesc = lambda valor: formata_decimal(valor, 2)
-formata_vOutro = lambda valor: formata_decimal(valor, 2)
-formata_vIPI = lambda valor: formata_decimal(valor, 2)
-formata_vNF = lambda valor: formata_decimal(valor, 2)
-formata_qCom = lambda valor: formata_decimal(valor, 3)
-formata_vUnCom = lambda valor: formata_decimal(valor, 5)
-formata_vProd = lambda valor: formata_decimal(valor, 2)
-formata_pIPI = lambda valor: formata_decimal(valor, 2)
-formata_vOrig = lambda valor: formata_decimal(valor, 2)
-formata_vDesc = lambda valor: formata_decimal(valor, 2)
-formata_vLiq = lambda valor: formata_decimal(valor, 2)
-formata_vDup = lambda valor: formata_decimal(valor, 2)
-formata_pesoB = lambda valor: formata_decimal(valor, 2)
-formata_pesoL = lambda valor: formata_decimal(valor, 2)
-formata_pICMS = lambda valor: formata_decimal(valor, 2)
+def formata_duas_casas(valor):
+    return formata_decimal(valor, 2)
+
+
+def formata_tres_casas(valor):
+    return formata_decimal(valor, 3)
+
+
+def formata_cinco_casas(valor):
+    return formata_decimal(valor, 5)
+
+
+formata_vBC = formata_duas_casas
+formata_vICMS = formata_duas_casas
+formata_vBCST = formata_duas_casas
+formata_vST = formata_duas_casas
+formata_vTotTrib = formata_duas_casas
+formata_vProd = formata_duas_casas
+formata_vFrete = formata_duas_casas
+formata_vSeg = formata_duas_casas
+formata_vDesc = formata_duas_casas
+formata_vOutro = formata_duas_casas
+formata_vIPI = formata_duas_casas
+formata_vNF = formata_duas_casas
+formata_qCom = formata_tres_casas
+formata_vUnCom = formata_cinco_casas
+formata_vProd = formata_duas_casas
+formata_pIPI = formata_duas_casas
+formata_vOrig = formata_duas_casas
+formata_vDesc = formata_duas_casas
+formata_vLiq = formata_duas_casas
+formata_vDup = formata_duas_casas
+formata_pesoB = formata_duas_casas
+formata_pesoL = formata_duas_casas
+formata_pICMS = formata_duas_casas
 
 
 def formata_fone(fone):
@@ -359,9 +369,9 @@ def fatura_a_prazo(NFe):
         len(str(NFe.infNFe.cobr.dup)) > 1 or
         ((len(str(NFe.infNFe.cobr.dup)) == 1) and
          (datetime.strptime(str(NFe.infNFe.cobr.dup[0].dVenc),
-                '%Y-%m-%d').toordinal() > datetime.strptime(
-                    str(NFe.infNFe.ide.dEmi.toordinal()),
-                        '%Y-%m-%d').toordinal()))):
+                            '%Y-%m-%d').toordinal() > datetime.strptime(
+             str(NFe.infNFe.ide.dEmi.toordinal()),
+             '%Y-%m-%d').toordinal()))):
         return True
 
     return False

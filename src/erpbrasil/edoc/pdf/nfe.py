@@ -1,10 +1,10 @@
 import re
-from lxml import objectify, etree
 
-from erpbrasil.edoc.pdf.base import VoidElement
-from erpbrasil.edoc.pdf import lookup
+from lxml import objectify
 
 from erpbrasil.edoc.pdf import danfe_formata
+from erpbrasil.edoc.pdf import lookup
+from erpbrasil.edoc.pdf.base import VoidElement
 
 nfe_namespace = lookup.get_namespace('http://www.portalfiscal.inf.br/nfe')
 
@@ -84,7 +84,6 @@ class NFeElement(objectify.ObjectifiedElement):
             tag = search.group(1)
             method = ('formata_%s' % tag)
             if hasattr(danfe_formata, method):
-
                 result = eval(
                     'danfe_formata.' + method + '(\'' + str(result.text) + '\')')
 

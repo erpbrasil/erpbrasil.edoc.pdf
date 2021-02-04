@@ -1,4 +1,6 @@
-from os import walk, path
+from os import path
+from os import walk
+
 from erpbrasil.edoc.pdf import base
 
 PATH = 'xml'
@@ -11,5 +13,4 @@ for (dirpath, dirnames, filenames) in walk(PATH):
         output = path.join(OUTPUT, file)
 
         print('XML: ' + file)
-        print (base.ImprimirXml.imprimir(caminho_xml=arquivo, output_dir=output))
-
+        print(base.ImprimirXml.imprimir(caminho_xml=arquivo, output_dir=output))

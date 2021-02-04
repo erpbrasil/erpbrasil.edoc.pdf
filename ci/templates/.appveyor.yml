@@ -2,8 +2,6 @@ version: '{branch}-{build}'
 build: off
 environment:
   global:
-    COVERALLS_EXTRAS: '-v'
-    COVERALLS_REPO_TOKEN: [Required for Appveyor, take it from https://coveralls.io/github/erpbrasil/erpbrasil.edoc.pdf]
   matrix:
     - TOXENV: check
       TOXPYTHON: C:\Python36\python.exe
@@ -12,7 +10,8 @@ environment:
       PYTHON_ARCH: '32'
 {% for env in tox_environments %}
 {% if env.startswith(('py2', 'py3')) %}
-    - TOXENV: {{ env }},codecov,coveralls{{ "" }}
+    - TOXENV: {{ env }},codecov
+
       TOXPYTHON: C:\Python{{ env[2:4] }}\python.exe
       PYTHON_HOME: C:\Python{{ env[2:4] }}
       PYTHON_VERSION: '{{ env[2] }}.{{ env[3] }}'
@@ -20,7 +19,8 @@ environment:
 {% if 'nocov' in env %}
       WHEEL_PATH: .tox/dist
 {% endif %}
-    - TOXENV: {{ env }},codecov,coveralls{{ "" }}
+    - TOXENV: {{ env }},codecov
+
       TOXPYTHON: C:\Python{{ env[2:4] }}-x64\python.exe
       PYTHON_HOME: C:\Python{{ env[2:4] }}-x64
       PYTHON_VERSION: '{{ env[2] }}.{{ env[3] }}'
@@ -28,8 +28,8 @@ environment:
 {% if 'nocov' in env %}
       WHEEL_PATH: .tox/dist
 {% endif %}
-{% if env.startswith('py2') %}
-      WINDOWS_SDK_VERSION: v7.0
+{% if env.startswith(('py2', 'py34')) %}
+      WINDOWS_SDK_VERSION: v7.{{ '1' if env.startswith('py3') else '0' }}
 {% endif %}
 {% endif %}{% endfor %}
 init:
