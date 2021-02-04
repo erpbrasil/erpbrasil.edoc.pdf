@@ -1,7 +1,7 @@
 from lxml import etree
 from lxml import objectify
 
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 
 lookup = etree.ElementNamespaceClassLookup(
     objectify.ObjectifyElementClassLookup())
