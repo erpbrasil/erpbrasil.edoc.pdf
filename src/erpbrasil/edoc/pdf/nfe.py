@@ -1,5 +1,5 @@
 import re
-from lxml import objectify, etree
+from lxml import objectify
 
 from erpbrasil.edoc.pdf.base import VoidElement
 from erpbrasil.edoc.pdf import lookup
@@ -84,7 +84,6 @@ class NFeElement(objectify.ObjectifiedElement):
             tag = search.group(1)
             method = ('formata_%s' % tag)
             if hasattr(danfe_formata, method):
-
                 result = eval(
                     'danfe_formata.' + method + '(\'' + str(result.text) + '\')')
 

@@ -11,5 +11,4 @@ for (dirpath, dirnames, filenames) in walk(PATH):
         output = path.join(OUTPUT, file)
 
         print('XML: ' + file)
-        print (base.ImprimirXml.imprimir(caminho_xml=arquivo, output_dir=output))
-
+        print(base.ImprimirXml.imprimir(caminho_xml=arquivo, output_dir=output))
