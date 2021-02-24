@@ -115,7 +115,7 @@ def formata_placa(placa):
 
 def formata_dhRecbto(dhRecbto):
     dhRecbto = str(dhRecbto)
-    if dhRecbto is None:
+    if dhRecbto in ['None', None]:
         return ''
     else:
         dhRecbto = parse(dhRecbto)
@@ -303,7 +303,8 @@ def cnpj_transportadora_formatado(NFe):
 
 
 def formata_protocolo(protNFe):
-    if not hasattr(protNFe.infProt, 'nProt'):
+    if not hasattr(protNFe.infProt, 'nProt') \
+            or protNFe.infProt.nProt.text == '':
         return ''
 
     formatado = str(protNFe.infProt.nProt)
