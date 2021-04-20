@@ -75,7 +75,7 @@ setup(
         'click',
         'erpbrasil.base',
         'genshi',
-        'reportlab',
+        'reportlab>=3.5',
         'lxml',
         'py3o.template',
         'sh',
