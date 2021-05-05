@@ -12,6 +12,10 @@ from genshi import Markup
 from reportlab.graphics.barcode import createBarcodeDrawing
 
 
+def formata_CEP(cep):
+    return format_zipcode(cep, 'BR')
+
+
 def formata_decimal(numero, digitos):
     numero = float(numero)
 
@@ -158,6 +162,7 @@ def formata_hora(data):
 def formata_dVenc(dVenc):
     dVenc = datetime.strptime(str(dVenc), '%Y-%m-%d')
     return dVenc.strftime("%d/%m/%Y")
+
 
 ##
 # -----------------------------------------------------------------------------
@@ -366,12 +371,12 @@ def fatura_a_prazo(NFe):
         return False
 
     if (str(NFe.infNFe.ide.indPag) == '1' or
-        len(str(NFe.infNFe.cobr.dup)) > 1 or
-        ((len(str(NFe.infNFe.cobr.dup)) == 1) and
-         (datetime.strptime(str(NFe.infNFe.cobr.dup[0].dVenc),
-                            '%Y-%m-%d').toordinal() > datetime.strptime(
-             str(NFe.infNFe.ide.dEmi.toordinal()),
-             '%Y-%m-%d').toordinal()))):
+            len(str(NFe.infNFe.cobr.dup)) > 1 or
+            ((len(str(NFe.infNFe.cobr.dup)) == 1) and
+             (datetime.strptime(str(NFe.infNFe.cobr.dup[0].dVenc),
+                                '%Y-%m-%d').toordinal() > datetime.strptime(
+                 str(NFe.infNFe.ide.dEmi.toordinal()),
+                 '%Y-%m-%d').toordinal()))):
         return True
 
     return False
