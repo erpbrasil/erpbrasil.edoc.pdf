@@ -30,7 +30,6 @@ class VoidElement(object):
 
 
 class ImprimirXml(object):
-
     TIPOS_DOCUMENTOS = {
         'nfe': 'danfe',
     }
