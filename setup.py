@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 
 setup(
     name='erpbrasil.edoc.pdf',
-    version='0.1.1',
+    version='1.0.0',
     license='MIT',
     description='Impressão de documentos fiscais a partir do XML: NF-E, NFC-E, CT-E, MDF-E, GNRE e etc.',
     long_description='%s\n%s' % (
