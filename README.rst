@@ -50,9 +50,9 @@ Overview
     :alt: Supported implementations
     :target: https://pypi.org/project/erpbrasil.edoc.pdf
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/erpbrasil/erpbrasil.edoc.pdf/v1.0.1.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/erpbrasil/erpbrasil.edoc.pdf/v1.0.2.svg
     :alt: Commits since latest release
-    :target: https://github.com/erpbrasil/erpbrasil.edoc.pdf/compare/v1.0.1...master
+    :target: https://github.com/erpbrasil/erpbrasil.edoc.pdf/compare/v1.0.2...master
 
 
 
