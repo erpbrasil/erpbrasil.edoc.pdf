@@ -49,7 +49,7 @@ class NFeElement(objectify.ObjectifiedElement):
     # TODO: Implementar metodo para mostrar atributos filhos
 
     def __getattr__(self, item):
-        if item in NAO_OBRIGATORIO:
+        if item in NAO_OBRIGATORIO or self.tag.endswith('transporta'):
             return VoidElement()
 
         if self.tag.endswith('ICMS') or self.tag.endswith('IPI'):
