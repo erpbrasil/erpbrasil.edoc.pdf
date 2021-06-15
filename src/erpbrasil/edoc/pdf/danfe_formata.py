@@ -128,7 +128,7 @@ def formata_placa(placa):
 
 def formata_dhRecbto(dhRecbto):
     dhRecbto = str(dhRecbto)
-    if dhRecbto is None:
+    if dhRecbto == 'None':
         return ''
     else:
         dhRecbto = parse(dhRecbto)
