@@ -379,8 +379,7 @@ def fatura_a_prazo(NFe):
 
 
 def fatura_a_vista(NFe):
-    fatura = fatura_a_prazo(NFe)
-    return not fatura
+    return not fatura_a_prazo(NFe)
 
 
 def numero_item(det):
