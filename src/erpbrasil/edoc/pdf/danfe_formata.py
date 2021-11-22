@@ -364,34 +364,22 @@ def cnpj_emitente_formatado(NFe):
 
 
 def fatura_a_prazo(NFe):
-    if not (len(str(NFe.infNFe.cobr.fat.nFat)) or
-            len(str(NFe.infNFe.cobr.fat.vOrig)) or
-            len(str(NFe.infNFe.cobr.fat.vDesc)) or
-            len(str(NFe.infNFe.cobr.fat.vLiq))):
-        return False
-
-    if (str(NFe.infNFe.ide.indPag) == '1' or
-            len(str(NFe.infNFe.cobr.dup)) > 1 or
-            ((len(str(NFe.infNFe.cobr.dup)) == 1) and
-             (datetime.strptime(str(NFe.infNFe.cobr.dup[0].dVenc),
-                                '%Y-%m-%d').toordinal() > datetime.strptime(
-                 str(NFe.infNFe.ide.dEmi.toordinal()),
-                 '%Y-%m-%d').toordinal()))):
+    # não funciona com multiplos detpag
+    if (
+        str(NFe.infNFe.pag.detPag.indPag) == "1"
+        or len(NFe.infNFe.cobr.dup) > 1
+        or (
+            len(NFe.infNFe.cobr.dup) == 1
+            and datetime.strptime(NFe.infNFe.cobr.dup[0].dVenc, "%d/%m/%Y").toordinal()
+            > datetime.strptime(NFe.infNFe.ide.dEmi, "%d/%m/%Y").toordinal()
+        )
+    ):
         return True
-
     return False
 
 
 def fatura_a_vista(NFe):
-    if not (len(str(NFe.infNFe.cobr.fat.nFat)) or
-            len(str(NFe.infNFe.cobr.fat.vOrig)) or
-            len(str(NFe.infNFe.cobr.fat.vDesc)) or
-            len(str(NFe.infNFe.cobr.fat.vLiq))):
-        return False
-
-    fatura = fatura_a_prazo(NFe)
-
-    return not fatura
+    return not fatura_a_prazo(NFe)
 
 
 def numero_item(det):
