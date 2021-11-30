@@ -127,32 +127,31 @@ def formata_placa(placa):
 
 
 def formata_dhRecbto(dhRecbto):
-    dhRecbto = str(dhRecbto)
-    if dhRecbto is None:
+    if not dhRecbto:
         return ''
-    else:
-        dhRecbto = parse(dhRecbto)
-        brasilia = pytz.timezone('America/Sao_Paulo')
-        dhRecbto = brasilia.normalize(dhRecbto.astimezone(pytz.utc)).strftime(
-            '%d/%m/%Y %H:%M:%S')
-        #
-        # Troca as siglas:
-        # BRT - Brasília Time -> HOB - Horário Oficial de Brasília
-        # BRST - Brasília Summer Time -> HVOB - Horário de Verão Oficial de Brasília
-        # AMT - Amazon Time -> HOA - Horário Oficial da Amazônia
-        # AMST - Amazon Summer Time -> HVOA - Horário de Verão Oficial da Amazônia
-        # FNT - Fernando de Noronha Time -> HOFN - Horário Oficial de Fernando de Noronha
-        #
-        dhRecbto = dhRecbto.replace('(-0100)', '(-01:00)')
-        dhRecbto = dhRecbto.replace('(-0200)', '(-02:00)')
-        dhRecbto = dhRecbto.replace('(-0300)', '(-03:00)')
-        dhRecbto = dhRecbto.replace('(-0400)', '(-04:00)')
-        dhRecbto = dhRecbto.replace('BRT', 'HOB')
-        dhRecbto = dhRecbto.replace('BRST', 'HVOB')
-        dhRecbto = dhRecbto.replace('AMT', 'HOA')
-        dhRecbto = dhRecbto.replace('AMST', 'HVOA')
-        dhRecbto = dhRecbto.replace('FNT', 'HOFN')
-        return dhRecbto
+    dhRecbto = str(dhRecbto)
+    dhRecbto = parse(dhRecbto)
+    brasilia = pytz.timezone('America/Sao_Paulo')
+    dhRecbto = brasilia.normalize(dhRecbto.astimezone(pytz.utc)).strftime(
+        '%d/%m/%Y %H:%M:%S')
+    #
+    # Troca as siglas:
+    # BRT - Brasília Time -> HOB - Horário Oficial de Brasília
+    # BRST - Brasília Summer Time -> HVOB - Horário de Verão Oficial de Brasília
+    # AMT - Amazon Time -> HOA - Horário Oficial da Amazônia
+    # AMST - Amazon Summer Time -> HVOA - Horário de Verão Oficial da Amazônia
+    # FNT - Fernando de Noronha Time -> HOFN - Horário Oficial de Fernando de Noronha
+    #
+    dhRecbto = dhRecbto.replace('(-0100)', '(-01:00)')
+    dhRecbto = dhRecbto.replace('(-0200)', '(-02:00)')
+    dhRecbto = dhRecbto.replace('(-0300)', '(-03:00)')
+    dhRecbto = dhRecbto.replace('(-0400)', '(-04:00)')
+    dhRecbto = dhRecbto.replace('BRT', 'HOB')
+    dhRecbto = dhRecbto.replace('BRST', 'HVOB')
+    dhRecbto = dhRecbto.replace('AMT', 'HOA')
+    dhRecbto = dhRecbto.replace('AMST', 'HVOA')
+    dhRecbto = dhRecbto.replace('FNT', 'HOFN')
+    return dhRecbto
 
 
 def formata_hora(data):
