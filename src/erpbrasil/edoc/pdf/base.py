@@ -120,7 +120,7 @@ class ImprimirXml(object):
 
     @classmethod
     def imprimir(self, string_xml=False, caminho_xml=False, output_dir=False,
-                 tipo_impressao=False):
+                 tipo_impressao=False, logo=False):
         '''
         Método base para a impressão de documentos
 
@@ -135,6 +135,8 @@ class ImprimirXml(object):
             string_xml = open(caminho_xml, 'rb').read()
 
         obj = ImprimirXml(string_xml)
+        if logo:
+            obj.logo = logo
 
         # Identifica o tipo de documento a ser impresso
         if tipo_impressao:
