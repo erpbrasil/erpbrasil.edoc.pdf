@@ -195,8 +195,9 @@ def endereco_retirada_formatado(NFe):
         formatado = NFe.infNFe.retirada.xLgr
         formatado += ', ' + NFe.infNFe.retirada.nro
 
-        if len(NFe.infNFe.retirada.xCpl.strip()):
-            formatado += ' - ' + NFe.infNFe.retirada.xCpl
+        if hasattr(NFe.infNFe.retirada, 'xCpl'):
+            if len(NFe.infNFe.retirada.xCpl.strip()):
+                formatado += ' - ' + NFe.infNFe.retirada.xCpl
 
         formatado += ' - ' + NFe.infNFe.retirada.xBairro
         formatado += ' - ' + NFe.infNFe.retirada.xMun
@@ -211,8 +212,9 @@ def endereco_entrega_formatado(NFe):
         formatado = str(NFe.infNFe.entrega.xLgr)
         formatado += ', ' + str(NFe.infNFe.entrega.nro)
 
-        if len(str(NFe.infNFe.entrega.xCpl).strip()):
-            formatado += ' - ' + str(NFe.infNFe.entrega.xCpl)
+        if hasattr(NFe.infNFe.entrega, 'xCpl'):
+            if len(NFe.infNFe.entrega.xCpl.strip()):
+                formatado += ' - ' + NFe.infNFe.entrega.xCpl
 
         formatado += ' - ' + str(NFe.infNFe.entrega.xBairro)
         formatado += ' - ' + str(NFe.infNFe.entrega.xMun)
