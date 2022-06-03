@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import base64
 import locale
-from datetime import datetime
-
 import pytz
+
+from datetime import datetime
 from dateutil.parser import parse
-from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CNPJ
-from erpbrasil.base.fiscal.cnpj_cpf import formata as formata_CPF
-from erpbrasil.base.misc import format_zipcode
+
 from genshi import Markup
 from reportlab.graphics.barcode import createBarcodeDrawing
+
+from erpbrasil.base.fiscal import cnpj_cpf
+from erpbrasil.base.misc import format_zipcode
 
 
 def formata_CEP(cep):
@@ -195,8 +196,9 @@ def endereco_retirada_formatado(NFe):
         formatado = NFe.infNFe.retirada.xLgr
         formatado += ', ' + NFe.infNFe.retirada.nro
 
-        if len(NFe.infNFe.retirada.xCpl.strip()):
-            formatado += ' - ' + NFe.infNFe.retirada.xCpl
+        if hasattr(NFe.infNFe.retirada, 'xCpl'):
+            if len(str(NFe.infNFe.retirada.xCpl).strip()):
+                formatado += ' - ' + str(NFe.infNFe.retirada.xCpl)
 
         formatado += ' - ' + NFe.infNFe.retirada.xBairro
         formatado += ' - ' + NFe.infNFe.retirada.xMun
@@ -206,13 +208,24 @@ def endereco_retirada_formatado(NFe):
         return ''
 
 
+def cnpj_endereco_retirada_formatado(NFe):
+    if hasattr(NFe.infNFe, 'retirada'):
+        if hasattr(NFe.infNFe.retirada, 'CPF'):
+            return cnpj_cpf.formata(NFe.infNFe.retirada.CPF.text)
+        elif hasattr(NFe.infNFe.retirada, 'CNPJ'):
+            return cnpj_cpf.formata(NFe.infNFe.retirada.CNPJ.text)
+        else:
+            return ''
+
+
 def endereco_entrega_formatado(NFe):
     if hasattr(NFe.infNFe, 'entrega'):
         formatado = str(NFe.infNFe.entrega.xLgr)
         formatado += ', ' + str(NFe.infNFe.entrega.nro)
 
-        if len(str(NFe.infNFe.entrega.xCpl).strip()):
-            formatado += ' - ' + str(NFe.infNFe.entrega.xCpl)
+        if hasattr(NFe.infNFe.entrega, 'xCpl'):
+            if len(str(NFe.infNFe.entrega.xCpl).strip()):
+                formatado += ' - ' + str(NFe.infNFe.entrega.xCpl)
 
         formatado += ' - ' + str(NFe.infNFe.entrega.xBairro)
         formatado += ' - ' + str(NFe.infNFe.entrega.xMun)
@@ -220,6 +233,16 @@ def endereco_entrega_formatado(NFe):
         return formatado
     else:
         return ''
+
+
+def cnpj_endereco_entrega_formatado(NFe):
+    if hasattr(NFe.infNFe, 'entrega'):
+        if hasattr(NFe.infNFe.entrega, 'CPF'):
+            return cnpj_cpf.formata(NFe.infNFe.entrega.CPF.text)
+        elif hasattr(NFe.infNFe.entrega, 'CNPJ'):
+            return cnpj_cpf.formata(NFe.infNFe.entrega.CNPJ.text)
+        else:
+            return ''
 
 
 def endereco_emitente_formatado_linha_1(NFe):
@@ -313,10 +336,12 @@ def chave_imagem(NFe):
 
 
 def cnpj_transportadora_formatado(NFe):
-    try:
-        return NFe.infNFe.transp.transporta.CPF
-    except AttributeError:
-        return NFe.infNFe.transp.transporta.CNPJ
+    if hasattr(NFe.infNFe.transp.transporta, 'CPF'):
+        return cnpj_cpf.formata(NFe.infNFe.transp.transporta.CPF.text)
+    elif hasattr(NFe.infNFe.transp.transporta, 'CNPJ'):
+        return cnpj_cpf.formata(NFe.infNFe.transp.transporta.CNPJ.text)
+    else:
+        return ''
 
 
 def formata_protocolo(protNFe):
@@ -347,9 +372,9 @@ def dados_adicionais_libreoffice(NFe):
 
 def cnpj_destinatario_formatado(NFe):
     if hasattr(NFe.infNFe.dest, 'CPF'):
-        return formata_CPF(NFe.infNFe.dest.CPF)
+        return cnpj_cpf.formata(NFe.infNFe.dest.CPF.text)
     elif hasattr(NFe.infNFe.dest, 'CNPJ'):
-        return formata_CNPJ(NFe.infNFe.dest.CNPJ)
+        return cnpj_cpf.formata(NFe.infNFe.dest.CNPJ.text)
     elif hasattr(NFe.infNFe.dest, 'idEstrangeiro'):
         return NFe.infNFe.dest.idEstrangeiro
     else:
@@ -357,10 +382,12 @@ def cnpj_destinatario_formatado(NFe):
 
 
 def cnpj_emitente_formatado(NFe):
-    if 'NFe.infNFe.emit.CPF' in locals() and len(NFe.infNFe.emit.CPF):
-        return formata_CPF(str(NFe.infNFe.emit.CPF))
+    if hasattr(NFe.infNFe.emit, 'CPF'):
+        return cnpj_cpf.formata(NFe.infNFe.emit.CPF.text)
+    elif hasattr(NFe.infNFe.emit, 'CNPJ'):
+        return cnpj_cpf.formata(NFe.infNFe.emit.CNPJ.text)
     else:
-        return formata_CNPJ(str(NFe.infNFe.emit.CNPJ))
+        return ''
 
 
 def fatura_a_prazo(NFe):
