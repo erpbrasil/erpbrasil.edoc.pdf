@@ -203,6 +203,7 @@ def endereco_retirada_formatado(NFe):
         formatado += ' - ' + NFe.infNFe.retirada.xBairro
         formatado += ' - ' + NFe.infNFe.retirada.xMun
         formatado += '-' + NFe.infNFe.retirada.UF
+        formatado += ' - ' + str(NFe.infNFe.retirada.CEP)
         return formatado
     else:
         return ''
@@ -230,6 +231,7 @@ def endereco_entrega_formatado(NFe):
         formatado += ' - ' + str(NFe.infNFe.entrega.xBairro)
         formatado += ' - ' + str(NFe.infNFe.entrega.xMun)
         formatado += '-' + str(NFe.infNFe.entrega.UF)
+        formatado += ' - ' + str(NFe.infNFe.entrega.CEP)
         return formatado
     else:
         return ''
