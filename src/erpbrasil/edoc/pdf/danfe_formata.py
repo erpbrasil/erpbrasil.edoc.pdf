@@ -112,6 +112,12 @@ def modFrete_formatado(NFe):
 
     elif modFrete == 2:
         formatado = '2-de Terceiros'
+    
+    elif modFrete == 3:
+        formatado = '3-próprio Remet'
+    
+    elif modFrete == 4:
+        formatado = '4-próprio Dest'
 
     elif modFrete == 9:
         formatado = '9-sem frete'
