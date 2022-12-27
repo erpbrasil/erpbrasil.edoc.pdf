@@ -128,10 +128,13 @@ def formata_placa(placa):
 
 
 def formata_dhRecbto(dhRecbto):
-    dhRecbto = str(dhRecbto)
-    if dhRecbto is None:
+    # FIXME em algum ponto o valor do campo esta sendo formatado para string
+    # deveria ter um tratamento caso o valor seja None deveria retornar a string
+    # vazia '' ao invés de retornar 'None'
+    if dhRecbto is 'None':
         return ''
     else:
+        dhRecbto = str(dhRecbto)
         dhRecbto = parse(dhRecbto)
         brasilia = pytz.timezone('America/Sao_Paulo')
         dhRecbto = brasilia.normalize(dhRecbto.astimezone(pytz.utc)).strftime(
