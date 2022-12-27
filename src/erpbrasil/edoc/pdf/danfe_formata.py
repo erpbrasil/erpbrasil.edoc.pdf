@@ -13,10 +13,6 @@ from erpbrasil.base.fiscal import cnpj_cpf
 from erpbrasil.base.misc import format_zipcode
 
 
-def formata_CEP(cep):
-    return format_zipcode(cep, 'BR')
-
-
 def formata_decimal(numero, digitos):
     numero = float(numero)
 
@@ -61,6 +57,10 @@ formata_vDup = formata_duas_casas
 formata_pesoB = formata_duas_casas
 formata_pesoL = formata_duas_casas
 formata_pICMS = formata_duas_casas
+
+
+def formata_CEP(cep):
+    return format_zipcode(cep, 'BR')
 
 
 def formata_fone(fone):
@@ -203,7 +203,7 @@ def endereco_retirada_formatado(NFe):
         formatado += ' - ' + NFe.infNFe.retirada.xBairro
         formatado += ' - ' + NFe.infNFe.retirada.xMun
         formatado += '-' + NFe.infNFe.retirada.UF
-        formatado += ' - ' + str(NFe.infNFe.retirada.CEP)
+        formatado += ' - ' + NFe.infNFe.retirada.CEP
         return formatado
     else:
         return ''
@@ -256,7 +256,7 @@ def endereco_emitente_formatado_linha_1(NFe):
 def endereco_emitente_formatado_linha_2(NFe):
     formatado = str(NFe.infNFe.emit.enderEmit.xMun)
     formatado += ' - ' + str(NFe.infNFe.emit.enderEmit.UF)
-    formatado += ' - ' + format_zipcode(NFe.infNFe.emit.enderEmit.CEP, 'BR')
+    formatado += ' - ' + str(NFe.infNFe.emit.enderEmit.CEP)
     return formatado
 
 
@@ -338,9 +338,9 @@ def chave_imagem(NFe):
 
 
 def cnpj_transportadora_formatado(NFe):
-    if hasattr(NFe.infNFe.transp.transporta, 'CPF'):
+    if hasattr(NFe.infNFe.transp.transporta, 'CPF') and len(NFe.infNFe.transp.transporta.CPF):
         return cnpj_cpf.formata(NFe.infNFe.transp.transporta.CPF.text)
-    elif hasattr(NFe.infNFe.transp.transporta, 'CNPJ'):
+    elif hasattr(NFe.infNFe.transp.transporta, 'CNPJ') and len(NFe.infNFe.transp.transporta.CNPJ):
         return cnpj_cpf.formata(NFe.infNFe.transp.transporta.CNPJ.text)
     else:
         return ''
