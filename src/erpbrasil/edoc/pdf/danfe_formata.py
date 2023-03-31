@@ -112,10 +112,10 @@ def modFrete_formatado(NFe):
 
     elif modFrete == 2:
         formatado = '2-de Terceiros'
-    
+
     elif modFrete == 3:
         formatado = '3-próprio Remet'
-    
+
     elif modFrete == 4:
         formatado = '4-próprio Dest'
 
@@ -396,8 +396,16 @@ def cnpj_emitente_formatado(NFe):
         return ''
 
 
+def sem_pagamento(NFe):
+    if str(NFe.infNFe.pag.detPag.tPag) == "90":
+        return True
+    return False
+
+
 def fatura_a_prazo(NFe):
     # não funciona com multiplos detpag
+    if sem_pagamento(NFe):
+        return False
     if (
         str(NFe.infNFe.pag.detPag.indPag) == "1"
         or len(NFe.infNFe.cobr.dup) > 1
@@ -412,6 +420,8 @@ def fatura_a_prazo(NFe):
 
 
 def fatura_a_vista(NFe):
+    if sem_pagamento(NFe):
+        return False
     return not fatura_a_prazo(NFe)
 
 
