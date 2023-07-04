@@ -34,18 +34,32 @@ def formata_cinco_casas(valor):
     return formata_decimal(valor, 5)
 
 
+# Formata campos do ICMSTot
 formata_vBC = formata_duas_casas
 formata_vICMS = formata_duas_casas
+formata_vICMSDeson = formata_duas_casas
+formata_vFCPUFDest = formata_duas_casas
+formata_vICMSUFDest = formata_duas_casas
+formata_vICMSUFRemet = formata_duas_casas
+formata_vFCP = formata_duas_casas
 formata_vBCST = formata_duas_casas
 formata_vST = formata_duas_casas
-formata_vTotTrib = formata_duas_casas
+formata_vFCPST = formata_duas_casas
+formata_vFCPSTRet = formata_duas_casas
 formata_vProd = formata_duas_casas
 formata_vFrete = formata_duas_casas
 formata_vSeg = formata_duas_casas
 formata_vDesc = formata_duas_casas
-formata_vOutro = formata_duas_casas
+formata_vII = formata_duas_casas
 formata_vIPI = formata_duas_casas
+formata_vIPIDevol = formata_duas_casas
+formata_vPIS = formata_duas_casas
+formata_vCOFINS = formata_duas_casas
+formata_vOutro = formata_duas_casas
 formata_vNF = formata_duas_casas
+formata_vTotTrib = formata_duas_casas
+
+# Formata outros campos do Det
 formata_qCom = formata_tres_casas
 formata_vUnCom = formata_cinco_casas
 formata_vProd = formata_duas_casas
