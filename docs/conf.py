@@ -20,7 +20,7 @@ project = 'erpbrasil.edoc.pdf'
 year = '2020'
 author = 'KMEE'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '1.1.0'
+version = release = '1.1.1'
 
 pygments_style = 'trac'
 templates_path = ['.']
