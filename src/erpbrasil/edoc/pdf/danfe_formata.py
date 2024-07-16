@@ -437,7 +437,7 @@ def regime_tributario(NFe):
 
 
 def cst_formatado(det):
-    formatado = str(det.imposto.ICMS.tipoICMS.orig).zfill(1)
+    formatado = str(det.imposto.ICMS.tipoICMS.orig).zfill(1) + '/'
 
     if hasattr(det.imposto, 'ISSQN'):
         if str(det.imposto.ISSQN.regime_tributario.text) == 1:
@@ -445,9 +445,9 @@ def cst_formatado(det):
         else:
             formatado += '41'
 
-    elif det.imposto.ICMS.regime_tributario == 1:
+    elif hasattr(det.imposto.ICMS.tipoICMS, 'CSOSN'):
         formatado += str(det.imposto.ICMS.tipoICMS.CSOSN).zfill(3)
-    else:
+    elif hasattr(det.imposto.ICMS.tipoICMS, 'CST'):
         formatado += str(det.imposto.ICMS.tipoICMS.CST).zfill(2)
 
     return formatado
