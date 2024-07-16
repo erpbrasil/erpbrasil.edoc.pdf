@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 import base64
 import locale
-import pytz
-
 from datetime import datetime
+
+import pytz
 from dateutil.parser import parse
-
-from genshi import Markup
-from reportlab.graphics.barcode import createBarcodeDrawing
-
 from erpbrasil.base.fiscal import cnpj_cpf
 from erpbrasil.base.misc import format_zipcode
+from genshi import Markup
+from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 def formata_decimal(numero, digitos):
@@ -145,7 +143,7 @@ def formata_dhRecbto(dhRecbto):
     # FIXME em algum ponto o valor do campo esta sendo formatado para string
     # deveria ter um tratamento caso o valor seja None deveria retornar a string
     # vazia '' ao invés de retornar 'None'
-    if dhRecbto is 'None':
+    if dhRecbto == 'None':
         return ''
     else:
         dhRecbto = str(dhRecbto)
@@ -437,7 +435,7 @@ def regime_tributario(NFe):
 
 
 def cst_formatado(det):
-    formatado = str(det.imposto.ICMS.tipoICMS.orig).zfill(1)
+    formatado = str(det.imposto.ICMS.tipoICMS.orig).zfill(1) + '/'
 
     if hasattr(det.imposto, 'ISSQN'):
         if str(det.imposto.ISSQN.regime_tributario.text) == 1:
@@ -445,9 +443,9 @@ def cst_formatado(det):
         else:
             formatado += '41'
 
-    elif det.imposto.ICMS.regime_tributario == 1:
+    elif hasattr(det.imposto.ICMS.tipoICMS, 'CSOSN'):
         formatado += str(det.imposto.ICMS.tipoICMS.CSOSN).zfill(3)
-    else:
+    elif hasattr(det.imposto.ICMS.tipoICMS, 'CST'):
         formatado += str(det.imposto.ICMS.tipoICMS.CST).zfill(2)
 
     return formatado

@@ -77,7 +77,7 @@ class NFeElement(objectify.ObjectifiedElement):
         result = objectify.ObjectifiedElement.__getattribute__(*args)
 
         # Caso existe um metodo de formatação para o atributo no danfe_formatado
-        if type(result) == NFeElement:
+        if type(result) is NFeElement:
             search = re.search('{.*}(.*)', result.tag)
             if not search:
                 return result
