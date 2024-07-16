@@ -79,6 +79,7 @@ setup(
         'lxml',
         'py3o.template',
         'sh',
+        'pytz',
         'python-dateutil',
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],

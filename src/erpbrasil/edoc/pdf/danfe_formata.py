@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 import base64
 import locale
-import pytz
-
 from datetime import datetime
+
+import pytz
 from dateutil.parser import parse
-
-from genshi import Markup
-from reportlab.graphics.barcode import createBarcodeDrawing
-
 from erpbrasil.base.fiscal import cnpj_cpf
 from erpbrasil.base.misc import format_zipcode
+from genshi import Markup
+from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 def formata_decimal(numero, digitos):
@@ -145,7 +143,7 @@ def formata_dhRecbto(dhRecbto):
     # FIXME em algum ponto o valor do campo esta sendo formatado para string
     # deveria ter um tratamento caso o valor seja None deveria retornar a string
     # vazia '' ao invés de retornar 'None'
-    if dhRecbto is 'None':
+    if dhRecbto == 'None':
         return ''
     else:
         dhRecbto = str(dhRecbto)
