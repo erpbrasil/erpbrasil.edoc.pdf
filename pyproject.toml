@@ -41,10 +41,13 @@ dependencies = [
     "py3o.template",
     "python-dateutil",
     "pytz",
-    # so para o codigo de barras do DANFE (createBarcodeDrawing); o reportlab 4
-    # desenha o PNG pelo rlPyCairo, que nao vem junto
-    "reportlab>=3.5",
-    "rlPyCairo; python_version>='3.8'",
+    # So para o codigo de barras do DANFE (createBarcodeDrawing). Ate o Python 3.10 o
+    # reportlab 3.6 tem wheel com o renderPM embutido (e o que o Odoo 14 em 3.8 usa);
+    # o reportlab 4 desenha o PNG pelo rlPyCairo, que precisa da libcairo no sistema,
+    # e o 3.6 nao tem wheel para 3.11+.
+    "reportlab>=3.5,<4; python_version<'3.11'",
+    "reportlab>=4; python_version>='3.11'",
+    "rlPyCairo; python_version>='3.11'",
 ]
 
 [project.optional-dependencies]

@@ -31,4 +31,7 @@ Changelog
   ``ERPBRASIL_LIBREOFFICE``, com erro claro quando não existe (antes falhava em
   silêncio, issue #13).
 * Testes independentes do diretório de execução e pulados sem LibreOffice.
+* ``reportlab`` fica em ``<4`` até o Python 3.10 (wheel com o renderPM embutido,
+  como o Odoo 14 usa); em 3.11+ entra o ``reportlab`` 4 com ``rlPyCairo``, que
+  precisa da ``libcairo`` do sistema.
 \n
