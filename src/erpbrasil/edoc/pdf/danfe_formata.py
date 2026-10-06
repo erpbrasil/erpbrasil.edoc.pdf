@@ -5,18 +5,19 @@ from datetime import datetime
 
 import pytz
 from dateutil.parser import parse
-from erpbrasil.base.fiscal import cnpj_cpf
-from erpbrasil.base.misc import format_zipcode
 from genshi import Markup
 from reportlab.graphics.barcode import createBarcodeDrawing
+
+from erpbrasil.base.fiscal import cnpj_cpf
+from erpbrasil.base.misc import format_zipcode
 
 
 def formata_decimal(numero, digitos):
     numero = float(numero)
 
-    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+    locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
-    formato = '%.' + str(digitos) + 'f'
+    formato = "%." + str(digitos) + "f"
     return locale.format(formato, numero, grouping=True)
 
 
@@ -72,27 +73,27 @@ formata_pICMS = formata_duas_casas
 
 
 def formata_CEP(cep):
-    return format_zipcode(cep, 'BR')
+    return format_zipcode(cep, "BR")
 
 
 def formata_fone(fone):
     if not fone or not len(fone.strip()):
-        return ''
+        return ""
 
-    if fone.strip() == '0':
-        return ''
+    if fone.strip() == "0":
+        return ""
 
     if len(fone) <= 8:
-        formatado = fone[:-4] + '-' + fone[-4:]
+        formatado = fone[:-4] + "-" + fone[-4:]
     elif len(fone) <= 10:
         ddd = fone[0:2]
         fone = fone[2:]
-        formatado = '(' + ddd + ') ' + fone[:-4] + '-' + fone[-4:]
+        formatado = "(" + ddd + ") " + fone[:-4] + "-" + fone[-4:]
 
     elif len(fone) <= 11:
         ddd = fone[0:3]
         fone = fone[3:]
-        formatado = '(' + ddd + ') ' + fone[-9:-6] + '-' + fone[-6:-4] + '-' + fone[-4:]
+        formatado = "(" + ddd + ") " + fone[-9:-6] + "-" + fone[-6:-4] + "-" + fone[-4:]
 
     #
     # Assume 8 dígitos para o número, 2 para o DD, e o restante é o DDI
@@ -100,12 +101,12 @@ def formata_fone(fone):
     else:
         numero = fone[4:]
         if len(numero) == 9:
-            numero = numero[0] + ' ' + numero[1:4] + '-' + numero[4:]
+            numero = numero[0] + " " + numero[1:4] + "-" + numero[4:]
         else:
-            numero = numero[0:4] + '-' + numero[4:]
+            numero = numero[0:4] + "-" + numero[4:]
         ddd = fone[2:4]
         ddi = fone[:2]
-        formatado = '+' + ddi + ' (' + ddd + ') ' + numero
+        formatado = "+" + ddi + " (" + ddd + ") " + numero
 
     return formatado
 
@@ -114,28 +115,28 @@ def modFrete_formatado(NFe):
     modFrete = int(NFe.infNFe.transp.modFrete.text)
 
     if modFrete == 0:
-        formatado = '0-Emitente'
+        formatado = "0-Emitente"
 
     elif modFrete == 1:
         if int(NFe.infNFe.ide.tpNF.text) == 0:
-            formatado = '1-do Remetente'
+            formatado = "1-do Remetente"
         else:
-            formatado = '1-do Destinatário'
+            formatado = "1-do Destinatário"
 
     elif modFrete == 2:
-        formatado = '2-de Terceiros'
+        formatado = "2-de Terceiros"
 
     elif modFrete == 9:
-        formatado = '9-sem frete'
+        formatado = "9-sem frete"
 
     else:
-        formatado = ''
+        formatado = ""
 
     return formatado
 
 
 def formata_placa(placa):
-    placa = placa[:-4] + '-' + placa[-4:]
+    placa = placa[:-4] + "-" + placa[-4:]
     return placa
 
 
@@ -143,14 +144,13 @@ def formata_dhRecbto(dhRecbto):
     # FIXME em algum ponto o valor do campo esta sendo formatado para string
     # deveria ter um tratamento caso o valor seja None deveria retornar a string
     # vazia '' ao invés de retornar 'None'
-    if dhRecbto == 'None':
-        return ''
+    if dhRecbto == "None":
+        return ""
     else:
         dhRecbto = str(dhRecbto)
         dhRecbto = parse(dhRecbto)
-        brasilia = pytz.timezone('America/Sao_Paulo')
-        dhRecbto = brasilia.normalize(dhRecbto.astimezone(pytz.utc)).strftime(
-            '%d/%m/%Y %H:%M:%S')
+        brasilia = pytz.timezone("America/Sao_Paulo")
+        dhRecbto = brasilia.normalize(dhRecbto.astimezone(pytz.utc)).strftime("%d/%m/%Y %H:%M:%S")
         #
         # Troca as siglas:
         # BRT - Brasília Time -> HOB - Horário Oficial de Brasília
@@ -159,15 +159,15 @@ def formata_dhRecbto(dhRecbto):
         # AMST - Amazon Summer Time -> HVOA - Horário de Verão Oficial da Amazônia
         # FNT - Fernando de Noronha Time -> HOFN - Horário Oficial de Fernando de Noronha
         #
-        dhRecbto = dhRecbto.replace('(-0100)', '(-01:00)')
-        dhRecbto = dhRecbto.replace('(-0200)', '(-02:00)')
-        dhRecbto = dhRecbto.replace('(-0300)', '(-03:00)')
-        dhRecbto = dhRecbto.replace('(-0400)', '(-04:00)')
-        dhRecbto = dhRecbto.replace('BRT', 'HOB')
-        dhRecbto = dhRecbto.replace('BRST', 'HVOB')
-        dhRecbto = dhRecbto.replace('AMT', 'HOA')
-        dhRecbto = dhRecbto.replace('AMST', 'HVOA')
-        dhRecbto = dhRecbto.replace('FNT', 'HOFN')
+        dhRecbto = dhRecbto.replace("(-0100)", "(-01:00)")
+        dhRecbto = dhRecbto.replace("(-0200)", "(-02:00)")
+        dhRecbto = dhRecbto.replace("(-0300)", "(-03:00)")
+        dhRecbto = dhRecbto.replace("(-0400)", "(-04:00)")
+        dhRecbto = dhRecbto.replace("BRT", "HOB")
+        dhRecbto = dhRecbto.replace("BRST", "HVOB")
+        dhRecbto = dhRecbto.replace("AMT", "HOA")
+        dhRecbto = dhRecbto.replace("AMST", "HVOA")
+        dhRecbto = dhRecbto.replace("FNT", "HOFN")
         return dhRecbto
 
 
@@ -176,7 +176,7 @@ def formata_hora(data):
 
 
 def formata_dVenc(dVenc):
-    dVenc = datetime.strptime(str(dVenc), '%Y-%m-%d')
+    dVenc = datetime.strptime(str(dVenc), "%Y-%m-%d")
     return dVenc.strftime("%d/%m/%Y")
 
 
@@ -187,158 +187,167 @@ def formata_dVenc(dVenc):
 
 def endereco_emitente_formatado(NFe):
     formatado = str(NFe.infNFe.emit.enderEmit.xLgr)
-    formatado += ', ' + str(NFe.infNFe.emit.enderEmit.nro)
+    formatado += ", " + str(NFe.infNFe.emit.enderEmit.nro)
 
-    if (hasattr(NFe.infNFe.emit.enderEmit, 'xCpl') and
-            len(str(NFe.infNFe.emit.enderEmit.xCpl).strip())):
-        formatado += ' - ' + str(NFe.infNFe.emit.enderEmit.xCpl)
+    if hasattr(NFe.infNFe.emit.enderEmit, "xCpl") and len(str(NFe.infNFe.emit.enderEmit.xCpl).strip()):
+        formatado += " - " + str(NFe.infNFe.emit.enderEmit.xCpl)
 
     return formatado
 
 
 def endereco_destinatario_formatado(NFe):
     formatado = str(NFe.infNFe.dest.enderDest.xLgr)
-    formatado += ', ' + str(NFe.infNFe.dest.enderDest.nro)
+    formatado += ", " + str(NFe.infNFe.dest.enderDest.nro)
 
-    if hasattr(NFe.infNFe.dest.enderDest, 'xCpl'):
-        formatado += ' - ' + str(NFe.infNFe.dest.enderDest.xCpl)
+    if hasattr(NFe.infNFe.dest.enderDest, "xCpl"):
+        formatado += " - " + str(NFe.infNFe.dest.enderDest.xCpl)
 
     return formatado
 
 
 def endereco_retirada_formatado(NFe):
-    if hasattr(NFe.infNFe, 'retirada'):
+    if hasattr(NFe.infNFe, "retirada"):
         formatado = NFe.infNFe.retirada.xLgr
-        formatado += ', ' + NFe.infNFe.retirada.nro
+        formatado += ", " + NFe.infNFe.retirada.nro
 
-        if hasattr(NFe.infNFe.retirada, 'xCpl'):
+        if hasattr(NFe.infNFe.retirada, "xCpl"):
             if len(str(NFe.infNFe.retirada.xCpl).strip()):
-                formatado += ' - ' + str(NFe.infNFe.retirada.xCpl)
+                formatado += " - " + str(NFe.infNFe.retirada.xCpl)
 
-        formatado += ' - ' + NFe.infNFe.retirada.xBairro
-        formatado += ' - ' + NFe.infNFe.retirada.xMun
-        formatado += '-' + NFe.infNFe.retirada.UF
-        formatado += ' - ' + NFe.infNFe.retirada.CEP
+        formatado += " - " + NFe.infNFe.retirada.xBairro
+        formatado += " - " + NFe.infNFe.retirada.xMun
+        formatado += "-" + NFe.infNFe.retirada.UF
+        formatado += " - " + NFe.infNFe.retirada.CEP
         return formatado
     else:
-        return ''
+        return ""
 
 
 def cnpj_endereco_retirada_formatado(NFe):
-    if hasattr(NFe.infNFe, 'retirada'):
-        if hasattr(NFe.infNFe.retirada, 'CPF'):
+    if hasattr(NFe.infNFe, "retirada"):
+        if hasattr(NFe.infNFe.retirada, "CPF"):
             return cnpj_cpf.formata(NFe.infNFe.retirada.CPF.text)
-        elif hasattr(NFe.infNFe.retirada, 'CNPJ'):
+        elif hasattr(NFe.infNFe.retirada, "CNPJ"):
             return cnpj_cpf.formata(NFe.infNFe.retirada.CNPJ.text)
         else:
-            return ''
+            return ""
 
 
 def endereco_entrega_formatado(NFe):
-    if hasattr(NFe.infNFe, 'entrega'):
+    if hasattr(NFe.infNFe, "entrega"):
         formatado = str(NFe.infNFe.entrega.xLgr)
-        formatado += ', ' + str(NFe.infNFe.entrega.nro)
+        formatado += ", " + str(NFe.infNFe.entrega.nro)
 
-        if hasattr(NFe.infNFe.entrega, 'xCpl'):
+        if hasattr(NFe.infNFe.entrega, "xCpl"):
             if len(str(NFe.infNFe.entrega.xCpl).strip()):
-                formatado += ' - ' + str(NFe.infNFe.entrega.xCpl)
+                formatado += " - " + str(NFe.infNFe.entrega.xCpl)
 
-        formatado += ' - ' + str(NFe.infNFe.entrega.xBairro)
-        formatado += ' - ' + str(NFe.infNFe.entrega.xMun)
-        formatado += '-' + str(NFe.infNFe.entrega.UF)
-        formatado += ' - ' + str(NFe.infNFe.entrega.CEP)
+        formatado += " - " + str(NFe.infNFe.entrega.xBairro)
+        formatado += " - " + str(NFe.infNFe.entrega.xMun)
+        formatado += "-" + str(NFe.infNFe.entrega.UF)
+        formatado += " - " + str(NFe.infNFe.entrega.CEP)
         return formatado
     else:
-        return ''
+        return ""
 
 
 def cnpj_endereco_entrega_formatado(NFe):
-    if hasattr(NFe.infNFe, 'entrega'):
-        if hasattr(NFe.infNFe.entrega, 'CPF'):
+    if hasattr(NFe.infNFe, "entrega"):
+        if hasattr(NFe.infNFe.entrega, "CPF"):
             return cnpj_cpf.formata(NFe.infNFe.entrega.CPF.text)
-        elif hasattr(NFe.infNFe.entrega, 'CNPJ'):
+        elif hasattr(NFe.infNFe.entrega, "CNPJ"):
             return cnpj_cpf.formata(NFe.infNFe.entrega.CNPJ.text)
         else:
-            return ''
+            return ""
 
 
 def endereco_emitente_formatado_linha_1(NFe):
     formatado = endereco_emitente_formatado(NFe)
-    formatado += ' - ' + str(NFe.infNFe.emit.enderEmit.xBairro)
+    formatado += " - " + str(NFe.infNFe.emit.enderEmit.xBairro)
     return formatado
 
 
 def endereco_emitente_formatado_linha_2(NFe):
     formatado = str(NFe.infNFe.emit.enderEmit.xMun)
-    formatado += ' - ' + str(NFe.infNFe.emit.enderEmit.UF)
-    formatado += ' - ' + str(NFe.infNFe.emit.enderEmit.CEP)
+    formatado += " - " + str(NFe.infNFe.emit.enderEmit.UF)
+    formatado += " - " + str(NFe.infNFe.emit.enderEmit.CEP)
     return formatado
 
 
 def endereco_emitente_formatado_linha_3(NFe):
-    if formata_fone(NFe.infNFe.emit.enderEmit.fone).strip() != '':
-        formatado = 'Fone: ' + NFe.infNFe.emit.enderEmit.fone
+    if formata_fone(NFe.infNFe.emit.enderEmit.fone).strip() != "":
+        formatado = "Fone: " + NFe.infNFe.emit.enderEmit.fone
     else:
-        formatado = ''
+        formatado = ""
     return formatado
 
 
 def endereco_emitente_formatado_linha_4(NFe):
     # return NFe.site or NFe.infNFe.emit.email.valor or '' # TODO: De onde vem o site
-    if hasattr(NFe.infNFe.emit, 'email'):
+    if hasattr(NFe.infNFe.emit, "email"):
         return str(NFe.infNFe.emit.email)
     else:
-        return ''
+        return ""
 
 
 def numero_formatado(NFe):
     num = str(NFe.infNFe.ide.nNF).zfill(9)
-    num_formatado = '.'.join((num[0:3], num[3:6], num[6:9]))
+    num_formatado = ".".join((num[0:3], num[3:6], num[6:9]))
 
-    if str(NFe.infNFe.ide.mod) == '65':
-        return 'nº ' + num_formatado
-    elif str(NFe.infNFe.ide.mod) == '55':
-        return 'Nº ' + num_formatado
+    if str(NFe.infNFe.ide.mod) == "65":
+        return "nº " + num_formatado
+    elif str(NFe.infNFe.ide.mod) == "55":
+        return "Nº " + num_formatado
     else:
         return num_formatado
 
 
 def serie_formatada(NFe):
-    if str(NFe.infNFe.ide.mod) == '65':
-        return 'Série ' + str(NFe.infNFe.ide.serie).zfill(3)
-    elif str(NFe.infNFe.ide.mod) == '55':
-        return 'SÉRIE ' + str(NFe.infNFe.ide.serie).zfill(3)
+    if str(NFe.infNFe.ide.mod) == "65":
+        return "Série " + str(NFe.infNFe.ide.serie).zfill(3)
+    elif str(NFe.infNFe.ide.mod) == "55":
+        return "SÉRIE " + str(NFe.infNFe.ide.serie).zfill(3)
     else:
         return str(NFe.infNFe.ide.serie).zfill(3)
 
 
 def monta_chave(NFe):
-    chave = str(NFe.infNFe.ide.cUF).strip().rjust(2, '0')
-    chave += (str(NFe.infNFe.ide.dhEmi)[2:4] + str(NFe.infNFe.ide.dhEmi)[5:7]
-              ).strip().rjust(4, '0')
-    chave += str(NFe.infNFe.emit.CNPJ).strip().rjust(14, '0')
+    chave = str(NFe.infNFe.ide.cUF).strip().rjust(2, "0")
+    chave += (str(NFe.infNFe.ide.dhEmi)[2:4] + str(NFe.infNFe.ide.dhEmi)[5:7]).strip().rjust(4, "0")
+    chave += str(NFe.infNFe.emit.CNPJ).strip().rjust(14, "0")
     chave += str(NFe.infNFe.ide.mod).zfill(2)
-    chave += str(NFe.infNFe.ide.serie).strip().rjust(3, '0')
-    chave += str(NFe.infNFe.ide.nNF).strip().rjust(9, '0')
-    chave += str(NFe.infNFe.ide.tpEmis).strip().rjust(1, '0')
-    chave += str(NFe.infNFe.ide.cNF).strip().rjust(8, '0')
-    chave += str(NFe.infNFe.ide.cDV).strip().rjust(1, '0')
+    chave += str(NFe.infNFe.ide.serie).strip().rjust(3, "0")
+    chave += str(NFe.infNFe.ide.nNF).strip().rjust(9, "0")
+    chave += str(NFe.infNFe.ide.tpEmis).strip().rjust(1, "0")
+    chave += str(NFe.infNFe.ide.cNF).strip().rjust(8, "0")
+    chave += str(NFe.infNFe.ide.cDV).strip().rjust(1, "0")
     return chave
 
 
 def chave_formatada(NFe):
     chave = monta_chave(NFe)
-    chave = chave.replace('.', '').replace('-', '').replace('/', '')
-    chave_formatada = ' '.join((
-        chave[0:4], chave[4:8], chave[8:12], chave[12:16], chave[16:20],
-        chave[20:24], chave[24:28], chave[28:32], chave[32:36],
-        chave[36:40], chave[40:44]))
+    chave = chave.replace(".", "").replace("-", "").replace("/", "")
+    chave_formatada = " ".join(
+        (
+            chave[0:4],
+            chave[4:8],
+            chave[8:12],
+            chave[12:16],
+            chave[16:20],
+            chave[20:24],
+            chave[24:28],
+            chave[28:32],
+            chave[32:36],
+            chave[36:40],
+            chave[40:44],
+        )
+    )
     return chave_formatada
 
 
 def chave_imagem(NFe):
     chave = monta_chave(NFe)
-    chave = chave = chave.replace('.', '').replace('-', '').replace('/', '')
+    chave = chave = chave.replace(".", "").replace("-", "").replace("/", "")
     #
     # Para converter centímetros para o tamanho do reportlab, use a
     # seguinte fórmula:
@@ -347,64 +356,63 @@ def chave_imagem(NFe):
     # Assim: 0,8 cm = 0,8 × 128 ÷ 2,75 = 37,2 = 37
     # Assim: 0,02 cm = 0,02 × 128 ÷ 2,75 = 0,9 = 1
     #
-    imagem = createBarcodeDrawing('Code128', value=chave,
-                                  barHeight=37, barWidth=1)
-    return base64.b64encode(imagem.asString('png')).decode('utf-8')
+    imagem = createBarcodeDrawing("Code128", value=chave, barHeight=37, barWidth=1)
+    return base64.b64encode(imagem.asString("png")).decode("utf-8")
 
 
 def cnpj_transportadora_formatado(NFe):
-    if hasattr(NFe.infNFe.transp.transporta, 'CPF') and len(NFe.infNFe.transp.transporta.CPF):
+    if hasattr(NFe.infNFe.transp.transporta, "CPF") and len(NFe.infNFe.transp.transporta.CPF):
         return cnpj_cpf.formata(NFe.infNFe.transp.transporta.CPF.text)
-    elif hasattr(NFe.infNFe.transp.transporta, 'CNPJ') and len(NFe.infNFe.transp.transporta.CNPJ):
+    elif hasattr(NFe.infNFe.transp.transporta, "CNPJ") and len(NFe.infNFe.transp.transporta.CNPJ):
         return cnpj_cpf.formata(NFe.infNFe.transp.transporta.CNPJ.text)
     else:
-        return ''
+        return ""
 
 
 def formata_protocolo(protNFe):
-    if not hasattr(protNFe.infProt, 'nProt'):
-        return ''
+    if not hasattr(protNFe.infProt, "nProt"):
+        return ""
 
     formatado = str(protNFe.infProt.nProt)
-    formatado += ' - '
+    formatado += " - "
     formatado += protNFe.infProt.dhRecbto
     return formatado
 
 
 def dados_adicionais_libreoffice(NFe):
-    da = ''
+    da = ""
 
-    if hasattr(NFe.infNFe, 'infAdic'):
-        if hasattr(NFe.infNFe.infAdic, 'infAdFisco'):
-            da = NFe.infNFe.infAdic.infAdFisco.text.replace('| ', '<text:line-break/>')
+    if hasattr(NFe.infNFe, "infAdic"):
+        if hasattr(NFe.infNFe.infAdic, "infAdFisco"):
+            da = NFe.infNFe.infAdic.infAdFisco.text.replace("| ", "<text:line-break/>")
 
-        if hasattr(NFe.infNFe.infAdic, 'infCpl'):
+        if hasattr(NFe.infNFe.infAdic, "infCpl"):
             if len(da) > 0:
-                da += '<text:line-break/>'
+                da += "<text:line-break/>"
 
-            da += NFe.infNFe.infAdic.infCpl.text.replace('| ', '<text:line-break/>')
+            da += NFe.infNFe.infAdic.infCpl.text.replace("| ", "<text:line-break/>")
 
     return Markup(da)
 
 
 def cnpj_destinatario_formatado(NFe):
-    if hasattr(NFe.infNFe.dest, 'CPF'):
+    if hasattr(NFe.infNFe.dest, "CPF"):
         return cnpj_cpf.formata(NFe.infNFe.dest.CPF.text)
-    elif hasattr(NFe.infNFe.dest, 'CNPJ'):
+    elif hasattr(NFe.infNFe.dest, "CNPJ"):
         return cnpj_cpf.formata(NFe.infNFe.dest.CNPJ.text)
-    elif hasattr(NFe.infNFe.dest, 'idEstrangeiro'):
+    elif hasattr(NFe.infNFe.dest, "idEstrangeiro"):
         return NFe.infNFe.dest.idEstrangeiro
     else:
-        return ''
+        return ""
 
 
 def cnpj_emitente_formatado(NFe):
-    if hasattr(NFe.infNFe.emit, 'CPF'):
+    if hasattr(NFe.infNFe.emit, "CPF"):
         return cnpj_cpf.formata(NFe.infNFe.emit.CPF.text)
-    elif hasattr(NFe.infNFe.emit, 'CNPJ'):
+    elif hasattr(NFe.infNFe.emit, "CNPJ"):
         return cnpj_cpf.formata(NFe.infNFe.emit.CNPJ.text)
     else:
-        return ''
+        return ""
 
 
 def fatura_a_prazo(NFe):
@@ -427,7 +435,7 @@ def fatura_a_vista(NFe):
 
 
 def numero_item(det):
-    return int(det.attrib['nItem'])
+    return int(det.attrib["nItem"])
 
 
 def regime_tributario(NFe):
@@ -435,56 +443,56 @@ def regime_tributario(NFe):
 
 
 def cst_formatado(det):
-    formatado = str(det.imposto.ICMS.tipoICMS.orig).zfill(1) + '/'
+    formatado = str(det.imposto.ICMS.tipoICMS.orig).zfill(1) + "/"
 
-    if hasattr(det.imposto, 'ISSQN'):
+    if hasattr(det.imposto, "ISSQN"):
         if str(det.imposto.ISSQN.regime_tributario.text) == 1:
-            formatado += '400'
+            formatado += "400"
         else:
-            formatado += '41'
+            formatado += "41"
 
-    elif hasattr(det.imposto.ICMS.tipoICMS, 'CSOSN'):
+    elif hasattr(det.imposto.ICMS.tipoICMS, "CSOSN"):
         formatado += str(det.imposto.ICMS.tipoICMS.CSOSN).zfill(3)
-    elif hasattr(det.imposto.ICMS.tipoICMS, 'CST'):
+    elif hasattr(det.imposto.ICMS.tipoICMS, "CST"):
         formatado += str(det.imposto.ICMS.tipoICMS.CST).zfill(2)
 
     return formatado
 
 
 def crt_descricao(NFe):
-    texto = 'Regime tributário: '
+    texto = "Regime tributário: "
 
     if int(NFe.infNFe.emit.CRT.text) == 1:
-        texto += 'SIMPLES Nacional'
+        texto += "SIMPLES Nacional"
     elif int(NFe.infNFe.emit.CRT.text) == 2:
-        texto += 'SIMPLES Nacional - excesso de sublimite de receita bruta'
+        texto += "SIMPLES Nacional - excesso de sublimite de receita bruta"
     else:
-        texto += 'regime normal'
+        texto += "regime normal"
 
     return texto
 
 
 def cst_descricao(NFe):
     if int(NFe.infNFe.emit.CRT.text) == 1:
-        return 'CSOSN'
+        return "CSOSN"
     else:
-        return 'CST'
+        return "CST"
 
 
 def versao(NFe):
-    return NFe.infNFe.attrib['versao']
+    return NFe.infNFe.attrib["versao"]
 
 
 def informacoes_adicionais_formatadas(det):
-    formatado = str(det.infAdProd).replace('|', '<text:line-break/>')
+    formatado = str(det.infAdProd).replace("|", "<text:line-break/>")
     return Markup(formatado)
 
 
 def formata_data(data):
-    if data == '':
-        return ''
+    if data == "":
+        return ""
     else:
-        return '{}/{}/{}'.format(data[8:10], data[5:7], data[0:4])
+        return "{}/{}/{}".format(data[8:10], data[5:7], data[0:4])
 
 
 def dEmi(ide):
@@ -504,18 +512,18 @@ def hSaiEnt(ide):
 
 
 def base_icms(det):
-    if str(det.imposto.ICMS.tipoICMS.CST) == '60':
+    if str(det.imposto.ICMS.tipoICMS.CST) == "60":
         return formata_decimal(det.imposto.ICMS.tipoICMS.vBCSTRet.text, 2)
     return det.imposto.ICMS.tipoICMS.vBC
 
 
 def valor_icms(det):
-    if str(det.imposto.ICMS.tipoICMS.CST) == '60':
+    if str(det.imposto.ICMS.tipoICMS.CST) == "60":
         return formata_decimal(det.imposto.ICMS.tipoICMS.vICMSSTRet.text, 2)
     return det.imposto.ICMS.tipoICMS.vICMS
 
 
 def aliquota_icms(det):
-    if str(det.imposto.ICMS.tipoICMS.CST) == '60':
+    if str(det.imposto.ICMS.tipoICMS.CST) == "60":
         return formata_decimal(det.imposto.ICMS.tipoICMS.pST.text, 2)
     return det.imposto.ICMS.tipoICMS.pICMS
