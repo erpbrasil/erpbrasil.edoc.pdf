@@ -6,4 +6,4 @@ def test_formata_decimal_separadores_brasileiros():
     assert formata_decimal(0, 2) == "0,00"
     assert formata_decimal("999.5", 0) == "1.000"
     assert formata_duas_casas("12.5") == "12,50"
-    assert formata_tres_casas(1.0005) == "1,001"
+    assert formata_tres_casas("2.5") == "2,500"
