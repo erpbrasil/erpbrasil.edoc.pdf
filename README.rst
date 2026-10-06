@@ -2,6 +2,18 @@
 Overview
 ========
 
+.. warning::
+
+   **Biblioteca sem suporte desde 2026-10-05.** A ``erpbrasil.edoc.pdf`` continua
+   publicada no PyPI para quem ainda a usa (Odoo 12.0 e 14.0 da localização OCA),
+   mas não recebe mais correções nem novas funcionalidades. Para imprimir DANFE,
+   DACTE, DAMDFE e os demais documentos fiscais, use a
+   `BrazilFiscalReport <https://github.com/Engenere/BrazilFiscalReport>`_
+   (``pip install brazilfiscalreport``), que gera o PDF em Python puro, sem
+   LibreOffice, e é a biblioteca usada pela localização OCA a partir da 16.0.
+   Na 14.0, a troca é a opção ``brazil_fiscal_report`` na empresa
+   (``l10n_br_nfe``).
+
 .. start-badges
 
 .. list-table::
