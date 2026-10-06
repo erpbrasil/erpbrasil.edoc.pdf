@@ -1,10 +1,8 @@
-__version__ = '1.2.1'
+__version__ = "1.3.0"
 
-from lxml import etree
-from lxml import objectify
+from lxml import etree, objectify
 
-lookup = etree.ElementNamespaceClassLookup(
-    objectify.ObjectifyElementClassLookup())
+lookup = etree.ElementNamespaceClassLookup(objectify.ObjectifyElementClassLookup())
 parser = etree.XMLParser()
 parser.set_element_class_lookup(lookup)
 
