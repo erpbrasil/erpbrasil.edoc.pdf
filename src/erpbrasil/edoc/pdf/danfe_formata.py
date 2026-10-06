@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import base64
-import locale
 from datetime import datetime
 
 import pytz
@@ -13,12 +12,14 @@ from erpbrasil.base.misc import format_zipcode
 
 
 def formata_decimal(numero, digitos):
-    numero = float(numero)
+    """1234567.891 -> "1.234.567,89" (digitos=2), sem depender do locale do sistema.
 
-    locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
-
-    formato = "%." + str(digitos) + "f"
-    return locale.format(formato, numero, grouping=True)
+    O setlocale(pt_BR.UTF-8) exigia o locale instalado (nao existe no CI nem em
+    toda imagem Docker) e mudava o locale do processo inteiro (locale.format
+    tambem saiu no Python 3.12).
+    """
+    texto = "{:,.{digitos}f}".format(float(numero), digitos=digitos)
+    return texto.replace(",", "\x00").replace(".", ",").replace("\x00", ".")
 
 
 def formata_duas_casas(valor):
